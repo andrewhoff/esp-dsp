@@ -1,58 +1,30 @@
-set(COMPONENT_SRCS  "modules/common/misc/dsps_pwroftwo.cpp"
-                    "modules/dotprod/float/dsps_dotprod_f32_ae32.S"
-                    "modules/dotprod/float/dsps_dotprod_f32_m_ae32.S"
-                    "modules/dotprod/float/dsps_dotprode_f32_ae32.S"
-                    "modules/dotprod/float/dsps_dotprode_f32_m_ae32.S"
-                    "modules/dotprod/float/dsps_dotprod_f32_ansi.c"
-                    "modules/dotprod/float/dsps_dotprode_f32_ansi.c"
-                    "modules/dotprod/fixed/dsps_dotprod_s16_ae32.S"
-                    "modules/dotprod/fixed/dsps_dotprod_s16_m_ae32.S"
-                    "modules/dotprod/fixed/dsps_dotprod_s16_ansi.c"
-                    "modules/matrix/float/dspm_mult_3x3x1_f32_ae32.S"
-                    "modules/matrix/float/dspm_mult_3x3x3_f32_ae32.S"
-                    "modules/matrix/float/dspm_mult_4x4x1_f32_ae32.S"
-                    "modules/matrix/float/dspm_mult_4x4x4_f32_ae32.S"
-                    "modules/matrix/float/dspm_mult_f32_ae32.S"
-                    "modules/matrix/float/dspm_mult_f32_ansi.c"
-                    "modules/matrix/fixed/dspm_mult_s16_ae32.S"
-                    "modules/matrix/fixed/dspm_mult_s16_m_ae32_vector.S"
-                    "modules/matrix/fixed/dspm_mult_s16_m_ae32.S"
-                    "modules/matrix/fixed/dspm_mult_s16_ansi.c"
-                    "modules/math/mulc/float/dsps_mulc_f32_ansi.c"
-                    "modules/math/addc/float/dsps_addc_f32_ansi.c"
-                    "modules/fft/float/dsps_fft2r_fc32_ae32.S"
-                    "modules/fft/float/dsps_fft2r_fc32_ansi.c"
-                    "modules/fft/fixed/dsps_fft2r_sc16_ae32.S"
-                    "modules/fft/fixed/dsps_fft2r_sc16_ansi.c"
-                    "modules/support/snr/float/dsps_snr_f32.cpp"
-                    "modules/support/sfdr/float/dsps_sfdr_f32.cpp"
-                    "modules/support/misc/dsps_d_gen.c"
-                    "modules/support/misc/dsps_h_gen.c"
-                    "modules/support/misc/dsps_tone_gen.c"
-                    "modules/support/view/dsps_view.cpp"
-                    "modules/windows/hann/float/dsps_wind_hann_f32.c"
-                    "modules/iir/biquad/dsps_biquad_f32_ae32.S"
-                    "modules/iir/biquad/dsps_biquad_f32_ansi.c"
-                    "modules/iir/biquad/dsps_biquad_gen_f32.c"
-                    "modules/fir/float/dsps_fir_f32_ae32.S"
-                    "modules/fir/float/dsps_fird_f32_ae32.S"
-                    "modules/fir/float/dsps_fir_f32_ansi.c"
-                    "modules/fir/float/dsps_fir_init_f32.c"
-                    "modules/fir/float/dsps_fird_f32_ansi.c"
-                    "modules/fir/float/dsps_fird_init_f32.c")
+# Object name in the cmake project
+set(OBJECT_NAME esp-dsp)
 
-set(COMPONENT_ADD_INCLUDEDIRS   "modules/dotprod/include"
-                                "modules/support/include"
-                                "modules/windows/hann/include"
-                                "modules/iir/include"
-                                "modules/fir/include"
-                                "modules/math/include"
-                                "modules/matrix/include"
-                                "modules/fft/include"
+# Object file name in the file manager
+set(OBJECT_FILE_NAME _${OBJECT_NAME}_all_${VARIANT})
+
+set(COMPONENT_SRCS  "modules/common/misc/dsps_pwroftwo.cpp"
+                    "modules/fft/float/dsps_fft2r_fc32_ansi.c"
+                    "modules/fft/float/dsps_fft2r_fc32_ae32.S")
+
+set(COMPONENT_ADD_INCLUDEDIRS   "modules/fft/include"
                                 "modules/common/include")
 
-set(COMPONENT_PRIV_INCLUDEDIRS  "modules/dotprod/float"
-                                "modules/dotprod/fixed"
-                                "modules/common/private_include")
+set(COMPONENT_PRIV_INCLUDEDIRS  "modules/common/private_include")
 
-register_component()
+# Create the object gathering
+add_library(${OBJECT_FILE_NAME} OBJECT
+    ${COMPONENT_SRCS}
+    )
+
+target_include_directories(${OBJECT_FILE_NAME} PRIVATE
+    ${COMPONENT_ADD_INCLUDEDIRS}
+    ${COMPONENT_PRIV_INCLUDEDIRS}
+    )
+
+target_compile_definitions(${OBJECT_FILE_NAME} PRIVATE
+    CONFIG_DSP_OPTIMIZED
+)
+
+#register_component()
