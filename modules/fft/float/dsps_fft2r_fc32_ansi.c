@@ -15,6 +15,7 @@
 #include "dsps_fft2r.h"
 #include "dsp_common.h"
 #include <math.h>
+#include <stdlib.h>
 
 float* dsps_fft_w_table_fc32;
 int dsps_fft_w_table_size;
@@ -41,9 +42,9 @@ esp_err_t dsps_fft2r_init_fc32(float* fft_table_buff, int table_size)
         }
         dsps_fft_w_table_fc32 = fft_table_buff;
         dsps_fft_w_table_size = table_size;
-    } else 
+    } else
     {
-        if (!dsps_fft2r_mem_allocated) 
+        if (!dsps_fft2r_mem_allocated)
         {
             dsps_fft_w_table_fc32 = (float*)malloc(CONFIG_DSP_MAX_FFT_SIZE*sizeof(float));
         }
@@ -116,7 +117,7 @@ esp_err_t dsps_fft2r_fc32_ansi(float *data, int N)
 static inline unsigned short reverse(unsigned short x, unsigned short N, int order)
 {
     unsigned short b = x;
-    
+
     b = (b & 0xff00) >> 8 | (b & 0x00fF) << 8;
     b = (b & 0xf0F0) >> 4 | (b & 0x0f0F) << 4;
     b = (b & 0xCCCC) >> 2 | (b & 0x3333) << 2;
@@ -140,7 +141,7 @@ esp_err_t dsps_bit_rev_fc32_ansi(float *data, int N)
         return ESP_ERR_DSP_INVALID_LENGTH;
     }
     esp_err_t result = ESP_OK;
-    
+
     //float* temp = (float*)malloc(N*2*sizeof(float));
     // for (int i=0 ; i< N ; i++)
     // {
@@ -156,9 +157,9 @@ esp_err_t dsps_bit_rev_fc32_ansi(float *data, int N)
     // {
     //     int dest = reverse(i, N, order);
     //     if (i < dest)
-    //     {        
-    //         float re = data[dest*2 + 0]; 
-    //         float im = data[dest*2 + 1]; 
+    //     {
+    //         float re = data[dest*2 + 0];
+    //         float im = data[dest*2 + 1];
     //         data[dest*2 + 0] = data[i*2 + 0];
     //         data[dest*2 + 1] = data[i*2 + 1];
     //         data[i*2 + 0] = re;
@@ -166,7 +167,7 @@ esp_err_t dsps_bit_rev_fc32_ansi(float *data, int N)
     //     }
     // }
     // return result;
-    
+
     int j, k;
     float r_temp, i_temp;
     j = 0;
@@ -177,7 +178,7 @@ esp_err_t dsps_bit_rev_fc32_ansi(float *data, int N)
             k >>= 1;
         }
         j += k;
-        if (i < j) 
+        if (i < j)
         {
             r_temp = data[j * 2];
             data[j * 2] = data[i * 2];
