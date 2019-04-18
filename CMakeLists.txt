@@ -22,36 +22,20 @@ foreach(inc_file ${INCS})
     # Convert the relative path to an absolute one - for the include propagation
     get_filename_component(INC ${inc_file} ABSOLUTE)
 
-    set(ESP32_INCLUDE ${ESP32_INCLUDE}
-            ${INC}
-            )
+    set(ESP32_INCLUDE ${ESP32_INCLUDE} ${INC})
 
 endforeach()
 
-set(CHIRP_MATHS_INCLUDE ${CHIRP_MATHS_INCLUDE}
-        ${ESP32_INCLUDE}
-        PARENT_SCOPE
-        )
+set(CHIRP_MATHS_INCLUDE ${CHIRP_MATHS_INCLUDE} ${ESP32_INCLUDE} PARENT_SCOPE)
 
 # Create the object gathering
-add_library(${OBJECT_FILE_NAME} OBJECT
-    ${COMPONENT_SRCS}
-    )
+add_library(${OBJECT_FILE_NAME} OBJECT ${COMPONENT_SRCS})
 
 # Propagate object dependencies to the top level
-set(CHIRP_MATHS_OBJECT ${CHIRP_MATHS_OBJECT}
-        ${OBJECT_FILE_NAME}
-        PARENT_SCOPE
-        )
+set(CHIRP_MATHS_OBJECT ${CHIRP_MATHS_OBJECT} ${OBJECT_FILE_NAME} PARENT_SCOPE)
 
-target_include_directories(${OBJECT_FILE_NAME} PRIVATE
-    ${COMPONENT_ADD_INCLUDEDIRS}
-    ${COMPONENT_PRIV_INCLUDEDIRS}
-    idf
-    )
+target_include_directories(${OBJECT_FILE_NAME} PRIVATE ${ESP32_INCLUDE})
 
-target_compile_definitions(${OBJECT_FILE_NAME} PRIVATE
-    CONFIG_DSP_OPTIMIZED
-)
+target_compile_definitions(${OBJECT_FILE_NAME} PRIVATE CONFIG_DSP_OPTIMIZED)
 
 #register_component()
