@@ -13,7 +13,11 @@ set(COMPONENT_ADD_INCLUDEDIRS   "modules/fft/include"
 
 set(COMPONENT_PRIV_INCLUDEDIRS  "modules/common/private_include")
 
-set(INCS ${COMPONENT_ADD_INCLUDEDIRS} ${COMPONENT_PRIV_INCLUDEDIRS} idf)
+set(INCS
+        ${COMPONENT_ADD_INCLUDEDIRS}
+        ${COMPONENT_PRIV_INCLUDEDIRS}
+        idf
+        )
 
 set(ESP32_INCLUDE)
 
